@@ -1,0 +1,146 @@
+LAMMPS (29 Oct 2020)
+# Rhodopsin model
+
+variable	x index 1
+variable	y index 1
+variable	z index 1
+
+units           real
+neigh_modify    delay 5 every 1
+
+atom_style      full
+atom_modify	map hash
+bond_style      harmonic
+angle_style     charmm
+dihedral_style  charmm
+improper_style  harmonic
+pair_style      lj/charmm/coul/charmm 8.0 10.0
+read_data       data.rhodo
+Reading data file ...
+  orthogonal box = (-27.500000 -38.500000 -36.364600) to (27.500000 38.500000 36.361500)
+  1 by 2 by 2 MPI processor grid
+  reading atoms ...
+  32000 atoms
+  reading velocities ...
+  32000 velocities
+  scanning bonds ...
+  4 = max bonds/atom
+  scanning angles ...
+  8 = max angles/atom
+  scanning dihedrals ...
+  18 = max dihedrals/atom
+  scanning impropers ...
+  2 = max impropers/atom
+  reading bonds ...
+  27723 bonds
+  reading angles ...
+  40467 angles
+  reading dihedrals ...
+  56829 dihedrals
+  reading impropers ...
+  1034 impropers
+Finding 1-2 1-3 1-4 neighbors ...
+  special bond factors lj:    0.0      0.0      0.0     
+  special bond factors coul:  0.0      0.0      0.0     
+     4 = max # of 1-2 neighbors
+    12 = max # of 1-3 neighbors
+    24 = max # of 1-4 neighbors
+    26 = max # of special neighbors
+  special bonds CPU = 0.023 seconds
+  read_data CPU = 0.194 seconds
+
+replicate	$x $y $z
+replicate	1 $y $z
+replicate	1 1 $z
+replicate	1 1 1
+Replicating atoms ...
+  orthogonal box = (-27.500000 -38.500000 -36.364600) to (27.500000 38.500000 36.361500)
+  1 by 2 by 2 MPI processor grid
+  32000 atoms
+  27723 bonds
+  40467 angles
+  56829 dihedrals
+  1034 impropers
+Finding 1-2 1-3 1-4 neighbors ...
+  special bond factors lj:    0.0      0.0      0.0     
+  special bond factors coul:  0.0      0.0      0.0     
+     4 = max # of 1-2 neighbors
+    12 = max # of 1-3 neighbors
+    24 = max # of 1-4 neighbors
+    26 = max # of special neighbors
+  special bonds CPU = 0.018 seconds
+  replicate CPU = 0.042 seconds
+
+# Fixes using available styles
+fix             1 all nve/limit 0.01
+fix             2 all nph iso 0.0 0.0 1000.0 mtk no pchain 0
+fix             3 all langevin 300.0 300.0 100.0 48279
+
+special_bonds   charmm
+
+thermo          50
+thermo_style    multi
+timestep        2.0
+
+run		100
+WARNING: One or more atoms are time integrated more than once (../modify.cpp:285)
+Neighbor list info ...
+  update every 1 steps, delay 5 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 12
+  ghost atom cutoff = 12
+  binsize = 6, bins = 10 13 13
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair lj/charmm/coul/charmm, perpetual
+      attributes: half, newton on
+      pair build: half/bin/newton
+      stencil: half/bin/3d/newton
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 45.67 | 46.06 | 46.44 Mbytes
+---------------- Step        0 ----- CPU =      0.0000 (sec) ----------------
+TotEng   =    -29603.3766 KinEng   =     21444.8313 Temp     =       224.8288 
+PotEng   =    -51048.2079 E_bond   =      2538.0032 E_angle  =     10921.3750 
+E_dihed  =      5211.7865 E_impro  =       213.5116 E_vdwl   =     -2307.8634 
+E_coul   =    -67625.0208 E_long   =         0.0000 Press    =     10720.0842 
+Volume   =    307995.0335 
+---------------- Step       50 ----- CPU =      6.2249 (sec) ----------------
+TotEng   =    -59808.0720 KinEng   =      4709.3817 Temp     =        49.3734 
+PotEng   =    -64517.4537 E_bond   =      4552.1484 E_angle  =      5602.0822 
+E_dihed  =      4216.1863 E_impro  =        89.9591 E_vdwl   =     -2094.4418 
+E_coul   =    -76883.3879 E_long   =         0.0000 Press    =     -1948.2909 
+Volume   =    302730.2186 
+---------------- Step      100 ----- CPU =     12.8836 (sec) ----------------
+TotEng   =    -55600.5596 KinEng   =      4706.0538 Temp     =        49.3385 
+PotEng   =    -60306.6134 E_bond   =      4709.0388 E_angle  =      5542.5027 
+E_dihed  =      4089.6721 E_impro  =        96.7400 E_vdwl   =       118.8327 
+E_coul   =    -74863.3999 E_long   =         0.0000 Press    =      2589.2717 
+Volume   =    292578.1405 
+Loop time of 12.8837 on 4 procs for 100 steps with 32000 atoms
+
+Performance: 1.341 ns/day, 17.894 hours/ns, 7.762 timesteps/s
+97.7% CPU use with 4 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 11.058     | 11.195     | 11.55      |   6.2 | 86.90
+Bond    | 0.41948    | 0.43306    | 0.45815    |   2.4 |  3.36
+Neigh   | 0.55702    | 0.55729    | 0.55755    |   0.0 |  4.33
+Comm    | 0.10512    | 0.46037    | 0.60733    |  30.4 |  3.57
+Output  | 0.0002708  | 0.00027733 | 0.00029489 |   0.0 |  0.00
+Modify  | 0.22838    | 0.22858    | 0.22887    |   0.0 |  1.77
+Other   |            | 0.008685   |            |       |  0.07
+
+Nlocal:        8000.00 ave        8127 max        7952 min
+Histogram: 3 0 0 0 0 0 0 0 0 1
+Nghost:        23320.5 ave       23355 max       23292 min
+Histogram: 1 1 0 0 0 0 1 0 0 1
+Neighs:    3.12692e+06 ave 3.26555e+06 max  3.0534e+06 min
+Histogram: 2 0 0 1 0 0 0 0 0 1
+
+Total # of neighbors = 12507675
+Ave neighs/atom = 390.86484
+Ave special neighs/atom = 7.4318750
+Neighbor list builds = 3
+Dangerous builds = 0
+Total wall time: 0:00:13
