@@ -1,0 +1,27 @@
+metadata:
+  description: shell time capture output
+  version: "1.0"
+  runs: 10
+  timeout: 300
+  retry: True
+  retry_limit: 0
+
+  rhodo:
+    command:
+      template: >
+        OMP_NUM_THREADS=8
+        srun -N {{nodes}} --mpi=pmix_v4
+        gmx_mpi 
+        mdrun -deffnm md_0_1
+        -nsteps 10000
+
+
+    plot:
+      - title: Wall time vs Nodes
+        x_axis: nodes
+        y_axis: time
+        group_by: nodes
+
+rhodo:
+  nodes: [1,2,4,8,16]
+
