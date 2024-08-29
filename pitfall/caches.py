@@ -32,6 +32,6 @@ def plot_warm_cache_effect(times):
 file_path = 'example.txt'  # Replace with your file path
 iterations = 10  # Number of times to read the file
 
-times = measure_warm_cache_effect(file_path, iterations)
-plot_warm_cache_effect(times)
+times = measure_warm_cache_effect(file_path, 1)
+# plot_warm_cache_effect(times)
 

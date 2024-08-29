@@ -1,0 +1,1 @@
+dd if=/dev/zero of=example.txt bs=1M count=8192

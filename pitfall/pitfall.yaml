@@ -1,0 +1,23 @@
+metadata:
+  description: 
+  version: "1.0"
+  runs: 10
+  timeout: 300
+  retry: True
+  retry_limit: 0
+
+  experiment_a:
+    command:
+      template: >
+        python3 caches.py
+
+  experiment_b:
+    command:
+      template: >
+        python3 caches.py
+
+experiment_a:
+  experiment: "a"
+
+experiment_b:
+  experiment: "b"
