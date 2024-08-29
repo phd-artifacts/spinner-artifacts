@@ -1,0 +1,44 @@
+metadata:
+  description: Scheduler benchmarks
+  version: "1.0"
+  runs: 5
+  timeout: 300
+  retry: True
+  retry_limit: 0
+
+  main:
+    plot_axis:
+      - title: Schduling time vs Nodes
+        x_axis: nodes
+        y_axis: time
+        group_by: nodes,iter
+
+    command:
+      template: >
+        OMP_NUM_THREADS=8
+        LIBOMP_NUM_HIDDEN_HELPER_THREADS=8
+        mpirun -np {{nodes}} -ppn 1
+        -hosts "{{hosts}}"
+        singularity exec --nv {{sif_path}} bash -c "
+        /opt/task-bench/ompcluster/main
+        -steps 32 
+        -type stencil_1d 
+        -kernel compute_bound 
+        -iter {{iter}} 
+        -width 32
+        "
+
+main:
+  iter:
+    - 1000
+    - 10000000
+    - 100000000
+
+  nodes:
+    - 16
+    - 8
+    - 4
+    - 2
+  sif_path:
+    - "./runtime-dev_latest.sif"
+
